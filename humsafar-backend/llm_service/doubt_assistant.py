@@ -1,4 +1,4 @@
-﻿"""
+"""
 llm_service/doubt_assistant.py
 
 Owner: Person 3 (LLM)
@@ -76,19 +76,26 @@ from llm_service.provider import LLMServiceUnavailable, call_llm
 DOUBT_SYSTEM_PROMPT = """\
 You are a civic procedure assistant for the Humsafar application.
 
-A user is currently at a specific step in a government procedure and has a
-question about it.
+A user is currently at a specific step in a government procedure and has a question about it.
 
-YOUR STRICT RULES:
-1. Answer ONLY using the step information and official source content provided.
-   Do NOT use any general knowledge, assumptions, or information not in the context.
-2. If the answer cannot be confirmed from the given context, respond with:
-   "This could not be confirmed from the available official sources."
-   and set "confirmed" to false.
-3. Cite the source_id(s) that back your answer in the "source_ids" list.
-   If you cannot cite any source, you must mark "confirmed" as false.
-4. Keep your answer concise, plain, and helpful. Do not fabricate specifics.
-5. Return ONLY valid JSON matching this schema:
+YOUR GUIDELINES:
+1. OFFICIAL STATUTORY VERIFICATION (High Confidence):
+   If the user's question relates to official requirements, mandatory documents, eligibility, fees, deadlines, or portal procedures, and the answer can be confirmed from the provided step context or official sources:
+   - Answer directly, concisely, and accurately based on the sources.
+   - Set "confirmed" to true.
+   - List the relevant "source_ids" supporting the answer.
+
+2. PRACTICAL ADVISORY & GENERAL ASSISTANCE (Helpful Guidance):
+   If the user asks practical, operational, or common procedural questions (e.g. where to buy stamp paper, how to get an affidavit notarized, how to compress a PDF/photo, office working hours, common processing tips) that are NOT explicitly detailed in the official source text:
+   - Provide helpful, practical, and safe guidance.
+   - Always prefix your answer with: "General guidance: " so the citizen clearly understands this is practical advice rather than a statutory quote.
+   - Set "confirmed" to false.
+   - Set "source_ids" to an empty list [].
+
+3. UNANSWERABLE OR OFF-TOPIC:
+   If the question is completely off-topic or impossible to advise on safely, respond politely stating that this information must be verified directly with the issuing department or local office, and set "confirmed" to false with "source_ids": [].
+
+4. Return ONLY valid JSON matching this schema:
    {
      "answer": "<your answer string>",
      "confirmed": true/false,
@@ -135,7 +142,7 @@ def _build_doubt_user_prompt(
         f"CURRENT STEP CONTEXT:\n{step_context}\n"
         f"OFFICIAL SOURCE CONTENT:\n{sources_text}\n\n"
         f"USER QUESTION: {question}\n\n"
-        "Answer using ONLY the above context. Return JSON."
+        "Answer the user question following the instructions above. Return JSON."
     )
 
 
