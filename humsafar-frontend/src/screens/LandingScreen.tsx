@@ -89,23 +89,8 @@ export function LandingScreen({ onSearch, errorMessage, clarificationMessage }: 
         {/* Centered Hero Section */}
         <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
           {/* Staggered Hero Heading Reveal (Requirement 3) */}
-          <h1 className="mx-auto max-w-5xl text-center font-display font-black leading-tight tracking-[-0.035em] text-ink-800 dark:text-cream-50">
-  <span
-    className="anim-enter mr-3 inline-block text-4xl font-black text-saffron-500 sm:text-5xl lg:text-6xl"
-    aria-hidden
-  >
-    01
-  </span>
-
-  <span className="anim-hero-phrase-1 text-4xl sm:text-5xl lg:text-6xl">
-    Easy paperwork in sight,
-  </span>
-
-  <br />
-
-  <span className="anim-hero-phrase-3 font-light text-4xl text-saffron-500 sm:text-5xl lg:text-6xl">
-    Humsafar makes your journey right!
-  </span>
+          <h1 className="mx-auto text-center font-display text-5xl font-black tracking-[-0.035em] text-ink-800 dark:text-cream-50 sm:text-6xl lg:text-7xl">
+  Humsafar
 </h1>
 
           <p className="anim-d2 mt-6 max-w-2xl text-center text-lg sm:text-xl font-medium leading-relaxed text-ink-600 dark:text-ink-200">
