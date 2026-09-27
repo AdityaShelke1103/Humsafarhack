@@ -13,16 +13,16 @@ function CompassMark() {
 
 export function BrandMark({ compact = false }: { compact?: boolean }) {
   return (
-    <div className="flex items-center gap-2.5">
-      <div className="flex h-9 w-9 items-center justify-center border-2 border-ink-800 bg-ink-800 dark:border-saffron-400">
+    <div className="flex items-center gap-3">
+      <div className="flex h-10 w-10 items-center justify-center border-2 border-ink-800 bg-ink-800 shadow-[2px_2px_0_0_#142236] dark:border-saffron-400 dark:shadow-[2px_2px_0_0_#ffbd6e]">
         <CompassMark />
       </div>
       {!compact && (
         <div>
-          <p className="font-display text-lg font-bold leading-none text-ink-800 dark:text-cream-50">
+          <p className="font-display text-xl font-black leading-none text-ink-800 dark:text-cream-50">
             Humsafar
           </p>
-          <p className="mt-0.5 text-[10px] uppercase tracking-[0.22em] text-ink-400 dark:text-ink-300">
+          <p className="mt-1 text-xs font-bold uppercase tracking-[0.22em] text-ink-500 dark:text-ink-300">
             Field guide
           </p>
         </div>
@@ -38,9 +38,9 @@ export function ThemeToggle() {
       type="button"
       onClick={toggleTheme}
       aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-      className="flex h-9 w-9 items-center justify-center border-2 border-ink-800 text-ink-700 transition-transform duration-150 hover:bg-cream-100 active:translate-x-px active:translate-y-px dark:border-ink-200 dark:text-cream-100 dark:hover:bg-ink-800"
+      className="flex h-10 w-10 items-center justify-center border-2 border-ink-800 bg-cream-50 text-ink-700 shadow-[2px_2px_0_0_#142236] transition-all duration-150 hover:-translate-y-0.5 hover:bg-cream-100 hover:shadow-[3px_3px_0_0_#142236] active:translate-x-px active:translate-y-px dark:border-ink-300 dark:bg-ink-800 dark:text-cream-100 dark:shadow-[2px_2px_0_0_#ffbd6e] dark:hover:bg-ink-700"
     >
-      {theme === 'dark' ? <Sun size={16} strokeWidth={1.75} /> : <Moon size={16} strokeWidth={1.75} />}
+      {theme === 'dark' ? <Sun size={18} strokeWidth={2} /> : <Moon size={18} strokeWidth={2} />}
     </button>
   );
 }
@@ -53,10 +53,15 @@ export function AppHeader({ onBack }: { onBack?: () => void }) {
           {onBack && (
             <button
               onClick={onBack}
-              className="flex items-center gap-1.5 font-heading text-sm font-medium text-ink-500 hover:text-ink-800 dark:text-ink-300 dark:hover:text-cream-50"
+              className="group flex items-center gap-1.5 font-heading text-sm font-medium text-ink-500 hover:text-ink-800 dark:text-ink-300 dark:hover:text-cream-50"
             >
-              <ArrowLeft size={16} strokeWidth={1.75} />
-              Back
+              <ArrowLeft size={16} strokeWidth={1.75} className="transition-transform duration-150 group-hover:-translate-x-0.5" />
+              <span className="hover-text-swap">
+                <span className="hover-text-swap-inner">
+                  <span>Back</span>
+                  <span aria-hidden="true">Back</span>
+                </span>
+              </span>
             </button>
           )}
           <BrandMark />
