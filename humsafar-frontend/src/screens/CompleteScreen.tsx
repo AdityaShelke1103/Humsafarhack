@@ -224,14 +224,14 @@ export function CompleteScreen({ journey, onRestart }: CompleteScreenProps) {
 
       <main className="relative z-10 flex flex-1 items-center justify-center px-4 pb-16 pt-6 sm:px-6">
         <div className="w-full max-w-2xl">
-          <TicketFrame className="anim-enter" serial="MH-DOM/2026/0927-V" label="Civic Clearance Visa">
+          <TicketFrame className="anim-enter" serial={`HS-${(journey.state?.substring(0, 2) || 'IN').toUpperCase()}/2026-V`} label="Civic Clearance Visa">
             <div className="relative px-6 py-8 sm:px-8">
               <div className="visa-inner p-5 sm:p-7">
                 {/* Official Stamped Seal */}
                 <StampSeal
                   stamped
                   title="CLEARED"
-                  caption="REVENUE DEPT · ALL 6 STOPS"
+                  caption={`${(journey.department || "OFFICIAL PORTAL").toUpperCase()} · ALL ${journey.steps.length} STOPS`}
                   className="absolute right-4 top-6 h-36 w-36 text-teal-700/60 dark:text-teal-300/50"
                 />
 
@@ -250,7 +250,7 @@ export function CompleteScreen({ journey, onRestart }: CompleteScreenProps) {
 
                 <p className="mt-4 max-w-md text-sm leading-relaxed text-ink-600 dark:text-ink-300 sm:text-base">
                   <span className="font-bold text-ink-900 dark:text-cream-50">{journey.title}</span>
-                  {' '}— all 6 statutory stops verified and ready for official submission. Keep this itinerary manifest for your Tahsildar appointment.
+                  {' '}— all {journey.steps.length} procedural stops verified and ready for official submission. Keep this itinerary manifest for your official appointments and records.
                 </p>
 
                 {/* Bearer Passport Block */}
@@ -263,13 +263,13 @@ export function CompleteScreen({ journey, onRestart }: CompleteScreenProps) {
                       Bearer & Dossier
                     </p>
                     <p className="font-heading text-sm font-bold text-ink-800 dark:text-cream-50">
-                      Civic Traveller · State of Maharashtra
+                      Civic Traveller · {journey.state || 'India'}
                     </p>
                     <p className="mt-1 text-xs text-ink-500 dark:text-ink-300">
                       Authority: <span className="font-semibold text-ink-700 dark:text-cream-100">{journey.department}</span>
                     </p>
                     <p className="mt-0.5 text-xs text-ink-500 dark:text-ink-300">
-                      Jurisdiction: <span className="font-semibold text-ink-700 dark:text-cream-100">Tahsildar / Aaple Sarkar RTS</span>
+                      Jurisdiction: <span className="font-semibold text-ink-700 dark:text-cream-100">{journey.state || 'Official Portal'}</span>
                     </p>
                   </div>
                 </div>
@@ -313,12 +313,12 @@ export function CompleteScreen({ journey, onRestart }: CompleteScreenProps) {
                 {/* Action Buttons */}
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <a
-                    href={journey.sources[1].url}
+                    href={journey.sources[1]?.url || journey.sources[0]?.url || "#"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn-stamp flex-1"
                   >
-                    Open Aaple Sarkar Portal
+                    Open Official Portal
                     <ExternalLink size={16} />
                   </a>
                   <button
@@ -334,8 +334,8 @@ export function CompleteScreen({ journey, onRestart }: CompleteScreenProps) {
                 </div>
 
                 <div className="mt-6 flex flex-wrap items-center justify-between border-t border-ink-200 pt-3 text-[10px] uppercase tracking-wider text-ink-400 dark:border-ink-700 dark:text-ink-400">
-                  <span>Verified 2 official government sources</span>
-                  <span>Aaple Sarkar RTS Act 2015</span>
+                  <span>Verified {journey.sources.length} official government source{journey.sources.length === 1 ? '' : 's'}</span>
+                  <span>Official Public Services Portal</span>
                 </div>
               </div>
             </div>

@@ -18,6 +18,21 @@ TRUSTED_DOMAIN_SUFFIXES = (
     ".nic.in",
 )
 
+# Authorized national civic service portals and utility domains in India
+TRUSTED_EXACT_DOMAINS = (
+    "tin-nsdl.com",
+    "protean-tinpan.com",
+    "utiitsl.com",
+    "nvsp.in",
+    "eci.gov.in",
+    "uidai.gov.in",
+    "indiapost.gov.in",
+    "passportindia.gov.in",
+    "parivahan.gov.in",
+    "incometax.gov.in",
+    "epfindia.gov.in",
+)
+
 
 def _normalise_domain(url: str) -> str:
     """Extract and normalise the hostname from a URL."""
@@ -59,10 +74,16 @@ def _classify_source(domain: str) -> SourceType:
                 "rajasthan",
                 "kerala",
                 "tamilnadu",
+                "bihar",
+                "up",
+                "punjab",
             )
         ):
             return SourceType.STATE_PORTAL
 
+        return SourceType.GOVERNMENT_PORTAL
+
+    if any(domain == td or domain.endswith("." + td) for td in TRUSTED_EXACT_DOMAINS):
         return SourceType.GOVERNMENT_PORTAL
 
     return SourceType.OTHER
@@ -84,7 +105,11 @@ def filter_official(sources: List[OfficialSource]) -> List[OfficialSource]:
         if not domain:
             continue
 
-        if not domain.endswith(TRUSTED_DOMAIN_SUFFIXES):
+        is_trusted = domain.endswith(TRUSTED_DOMAIN_SUFFIXES) or any(
+            domain == td or domain.endswith("." + td) for td in TRUSTED_EXACT_DOMAINS
+        )
+
+        if not is_trusted:
             continue
 
         source.domain = domain
