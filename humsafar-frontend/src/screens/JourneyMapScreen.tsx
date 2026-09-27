@@ -21,6 +21,8 @@ import { Traveller } from '@/components/Traveller';
 import { TicketFrame } from '@/components/TicketFrame';
 import { CornerBrackets } from '@/components/CornerBrackets';
 import type { Journey, JourneyStep, SourceLink } from '@/data/journeyData';
+import { useLanguage } from '@/i18n/LanguageContext';
+import { translateContent } from '@/i18n/contentTranslations';
 
 interface JourneyMapScreenProps {
   journey: Journey;
@@ -32,7 +34,6 @@ interface JourneyMapScreenProps {
 }
 
 const modeIcon = { online: Globe, office: Building, both: Building };
-
 export function JourneyMapScreen({
   journey,
   currentStep,
@@ -41,6 +42,7 @@ export function JourneyMapScreen({
   onBack,
   onComplete,
 }: JourneyMapScreenProps) {
+  const { language, t } = useLanguage();
   const [selectedStep, setSelectedStep] = useState<JourneyStep | null>(null);
   const [showDoubtPanel, setShowDoubtPanel] = useState(false);
   const [showSourceDrawer, setShowSourceDrawer] = useState(false);
@@ -89,16 +91,16 @@ export function JourneyMapScreen({
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-ink-400 dark:text-ink-300">
-                {journey.state} · {journey.department}
+                {translateContent(journey.state, language)} · {translateContent(journey.department, language)}
               </p>
               <h1 className="mt-2 font-display text-3xl font-extrabold tracking-tight text-ink-800 sm:text-4xl dark:text-cream-50">
-                {journey.title}
+                {translateContent(journey.title, language)}
               </h1>
             </div>
             <div className="sm:text-right">
               <p className="font-display text-3xl font-extrabold tracking-tighter text-saffron-500">{progressPct}%</p>
               <p className="text-[10px] uppercase tracking-[0.18em] text-ink-400">
-                {completedSteps.length} of {journey.steps.length} stops
+                {completedSteps.length} {t.of} {journey.steps.length} {t.stops}
               </p>
               <div className="mt-2 h-[3px] w-40 bg-ink-200 sm:ml-auto dark:bg-ink-700">
                 <div
@@ -125,27 +127,27 @@ export function JourneyMapScreen({
               <div className="ticket-mini p-4">
                 <div className="border-b border-dashed border-ink-200 pb-3 dark:border-ink-700">
                   <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-saffron-600 dark:text-saffron-400">
-                    Route Manifest
+                    {t.routeManifest}
                   </p>
                   <p className="mt-1 font-heading text-sm font-bold text-ink-800 dark:text-cream-50">
-                    Maharashtra Domicile
+                    {journey.title}
                   </p>
                 </div>
                 <dl className="mt-3 space-y-2 text-xs">
                   <div className="flex justify-between">
-                    <span className="text-ink-500 dark:text-ink-400">Current Position:</span>
+                    <span className="text-ink-500 dark:text-ink-400">{t.currentPosition}:</span>
                     <span className="font-bold text-saffron-600 dark:text-saffron-400">
-                      Stop {currentStep} of {journey.steps.length}
+                      {t.stop} {currentStep} {t.of} {journey.steps.length}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-ink-500 dark:text-ink-400">Cleared Stops:</span>
+                    <span className="text-ink-500 dark:text-ink-400">{t.clearedStops}:</span>
                     <span className="font-bold text-teal-700 dark:text-teal-300">
                       {completedSteps.length} of {journey.steps.length}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-ink-500 dark:text-ink-400">Total Statutory Fee:</span>
+                    <span className="text-ink-500 dark:text-ink-400">{t.totalStatutoryFee}:</span>
                     <span className="font-bold text-ink-800 dark:text-cream-50">₹53.60</span>
                   </div>
                 </dl>
@@ -159,8 +161,8 @@ export function JourneyMapScreen({
                   <ShieldCheck size={13} className="text-teal-600 dark:text-teal-300" />
                   <span className="hover-text-swap">
                     <span className="hover-text-swap-inner">
-                      <span>Inspect Provenance (2 Sources)</span>
-                      <span aria-hidden="true">Inspect Provenance (2 Sources)</span>
+                      <span>{t.inspectProvenance}</span>
+                      <span aria-hidden="true">{t.inspectProvenance}</span>
                     </span>
                   </span>
                 </button>
@@ -169,7 +171,7 @@ export function JourneyMapScreen({
               {/* Stops Quick-Jump List with hover text-swap (Requirement 1) */}
               <div>
                 <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.22em] text-ink-400 dark:text-ink-300">
-                  Stops Index
+                  {t.stopsIndex}
                 </p>
                 <div className="space-y-2">
                   {journey.steps.map((step) => {
@@ -220,12 +222,12 @@ export function JourneyMapScreen({
                         </span>
                         {isCurrent && (
                           <span className="ml-auto shrink-0 text-[9px] font-extrabold uppercase tracking-wider text-saffron-600 dark:text-saffron-400">
-                            Here
+                            {t.here}
                           </span>
                         )}
                         {isDone && (
                           <span className="ml-auto shrink-0 text-[9px] font-bold uppercase tracking-wider text-teal-700 dark:text-teal-300">
-                            Stamped
+                            {t.stamped}
                           </span>
                         )}
                       </button>
@@ -297,6 +299,7 @@ function Roadmap({
   onStepClick,
   isStepBlocked,
 }: RoadmapProps) {
+  const { language, t } = useLanguage();
   return (
     <div className="relative space-y-6">
       {steps.map((step, idx) => {
@@ -320,7 +323,7 @@ function Roadmap({
                 type="button"
                 onClick={() => !isBlocked && onStepClick(step)}
                 disabled={isBlocked}
-                aria-label={`Stop ${step.id}: ${step.title}`}
+                aria-label={`${t.stop} ${step.id}: ${translateContent(step.title, language)}`}
                 className={`relative z-10 flex h-11 w-11 shrink-0 items-center justify-center transition-transform duration-150 ${
                   isDone
                     ? 'border-2 border-teal-700 bg-teal-50 text-teal-800 dark:border-teal-400 dark:bg-ink-800 dark:text-teal-300'
@@ -407,15 +410,11 @@ function Roadmap({
                   <span className="h-2.5 w-px bg-ink-200 dark:bg-ink-600" />
                   <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-ink-500 dark:text-ink-300">
                     <ModeIcon size={12} strokeWidth={2} />
-                    {step.detail.mode === 'online'
-                      ? 'Online portal'
-                      : step.detail.mode === 'office'
-                        ? 'Government office'
-                        : 'Online & Office'}
+                    {step.detail.mode === 'online' ? t.onlinePortal : step.detail.mode === 'office' ? t.governmentOffice : t.onlineAndOffice}
                   </span>
                 </div>
                 <span className="font-heading text-xs font-bold text-ink-600 dark:text-ink-300">
-                  ⏱ {step.detail.estimatedTime}
+                  ⏱ {translateContent(step.detail.estimatedTime, language)}
                 </span>
               </div>
 
@@ -431,10 +430,10 @@ function Roadmap({
                           : 'text-ink-800 dark:text-cream-50'
                   }`}
                 >
-                  {step.title}
+                  {translateContent(step.title, language)}
                 </h2>
                 <p className="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
-                  {step.description}
+                  {translateContent(step.description, language)}
                 </p>
               </div>
 
@@ -442,32 +441,32 @@ function Roadmap({
                 {isDone && (
                   <span className="stamp-badge border-teal-700 bg-teal-50/50 text-teal-800 dark:border-teal-300 dark:bg-teal-950/30 dark:text-teal-300">
                     <Check size={11} strokeWidth={3} />
-                    Verified & Stamped
+                    {t.verifiedAndStamped}
                   </span>
                 )}
                 {isCurrent && (
                   <span className="inline-flex items-center gap-1.5 font-heading text-xs font-bold text-saffron-600 dark:text-saffron-400">
                     <span className="h-2 w-2 rounded-full bg-saffron-500" />
-                    Here — Tap to view directive & clear stop →
+                    {t.hereTapToView}
                   </span>
                 )}
                 {isBlocked && (
                   <span className="inline-flex items-center gap-1.5 text-xs font-medium text-ink-400 dark:text-ink-400">
                     <Lock size={12} />
-                    Complete prior stops to unlock
+                    {t.completePriorStops}
                   </span>
                 )}
                 {!isDone && !isCurrent && !isBlocked && (
                   <span className="text-xs font-semibold text-ink-500 hover:text-ink-800 dark:text-ink-300 dark:hover:text-cream-50 hover-text-swap">
                     <span className="hover-text-swap-inner">
-                      <span>View stop requirements →</span>
-                      <span aria-hidden="true">View stop requirements →</span>
+                      <span>{t.viewRequirements}</span>
+                      <span aria-hidden="true">{t.viewRequirements}</span>
                     </span>
                   </span>
                 )}
 
                 <span className="text-[10px] font-bold uppercase tracking-wider text-ink-400 dark:text-ink-400">
-                  {step.detail.department}
+                  {translateContent(step.detail.department, language)}
                 </span>
               </div>
             </button>
@@ -509,6 +508,7 @@ function StepDetailModal({
   setShowWhyThisStep,
   isLastStep,
 }: StepDetailModalProps) {
+  const { language, t } = useLanguage();
   const detail = step.detail;
   const ModeIcon = modeIcon[detail.mode];
 
@@ -531,9 +531,9 @@ function StepDetailModal({
             </span>
             <div>
               <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-ink-400">
-                Stop {step.id} of {totalSteps}
+                {t.stop} {step.id} {t.of} {totalSteps}
               </p>
-              <h2 className="font-display text-lg font-bold text-ink-800 dark:text-cream-50">{step.title}</h2>
+              <h2 className="font-display text-lg font-bold text-ink-800 dark:text-cream-50">{translateContent(step.title, language)}</h2>
             </div>
           </div>
           <button
@@ -551,9 +551,9 @@ function StepDetailModal({
                 <Construction className="mt-0.5 shrink-0 text-saffron-600" size={18} />
                 <div>
                   <h3 className="font-heading text-sm font-bold text-ink-800 dark:text-cream-50">
-                    Roadblock ahead
+                    {t.roadblockAhead}
                   </h3>
-                  <p className="mt-1 text-sm text-ink-500 dark:text-ink-300">Complete these stops first:</p>
+                  <p className="mt-1 text-sm text-ink-500 dark:text-ink-300">{t.completeTheseStopsFirst}</p>
                   <div className="mt-2 flex flex-wrap gap-2">
                     {blockedBySteps.map((bs) => (
                       <span
@@ -561,7 +561,7 @@ function StepDetailModal({
                         className="inline-flex items-center gap-1.5 border border-ink-300 px-2 py-1 text-xs font-medium text-ink-600 dark:text-ink-200"
                       >
                         <Lock size={11} />
-                        {bs.shortTitle}
+                        {translateContent(bs.shortTitle, language)}
                       </span>
                     ))}
                   </div>
@@ -571,46 +571,46 @@ function StepDetailModal({
           )}
 
           <div>
-            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink-400">What to do</h3>
-            <p className="mt-2 leading-relaxed text-ink-600 dark:text-ink-200">{detail.whatToDo}</p>
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink-400">{t.whatToDo}</h3>
+            <p className="mt-2 leading-relaxed text-ink-600 dark:text-ink-200">{translateContent(detail.whatToDo, language)}</p>
           </div>
 
           <dl className="grid grid-cols-2 gap-4 border-y border-dashed border-ink-300 py-4 dark:border-ink-600">
             <div>
               <dt className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-ink-400">
-                <Building size={12} /> Department
+                <Building size={12} /> {t.department}
               </dt>
-              <dd className="mt-1 text-sm font-semibold text-ink-800 dark:text-cream-50">{detail.department}</dd>
+              <dd className="mt-1 text-sm font-semibold text-ink-800 dark:text-cream-50">{translateContent(detail.department, language)}</dd>
             </div>
             <div>
               <dt className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-ink-400">
-                <MapPin size={12} /> Location
+                <MapPin size={12} /> {t.location}
               </dt>
-              <dd className="mt-1 text-sm font-semibold text-ink-800 dark:text-cream-50">{detail.location}</dd>
+              <dd className="mt-1 text-sm font-semibold text-ink-800 dark:text-cream-50">{translateContent(detail.location, language)}</dd>
             </div>
             <div>
               <dt className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-ink-400">
-                <ModeIcon size={12} /> Mode
+                <ModeIcon size={12} /> {t.mode}
               </dt>
-              <dd className="mt-1 text-sm font-semibold capitalize text-ink-800 dark:text-cream-50">{detail.mode}</dd>
+              <dd className="mt-1 text-sm font-semibold capitalize text-ink-800 dark:text-cream-50">{translateContent(detail.mode, language)}</dd>
             </div>
             <div>
-              <dt className="text-[10px] font-bold uppercase tracking-wider text-ink-400">Est. time</dt>
-              <dd className="mt-1 text-sm font-semibold text-ink-800 dark:text-cream-50">{detail.estimatedTime}</dd>
+              <dt className="text-[10px] font-bold uppercase tracking-wider text-ink-400">{t.estimatedTime}</dt>
+              <dd className="mt-1 text-sm font-semibold text-ink-800 dark:text-cream-50">{translateContent(detail.estimatedTime, language)}</dd>
             </div>
           </dl>
 
           {detail.facts.length > 0 && (
             <div>
               <h3 className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-ink-400">
-                Key information
+                {t.keyInformation}
               </h3>
               <div className="divide-y divide-ink-200 dark:divide-ink-600">
                 {detail.facts.map((fact, idx) => (
                   <div key={idx} className="flex items-center justify-between gap-3 py-3">
                     <div className="min-w-0">
-                      <span className="text-xs text-ink-400">{fact.label}</span>
-                      <p className="font-heading text-sm font-bold text-ink-800 dark:text-cream-50">{fact.value}</p>
+                      <span className="text-xs text-ink-400">{translateContent(fact.label, language)}</span>
+                      <p className="font-heading text-sm font-bold text-ink-800 dark:text-cream-50">{translateContent(fact.value, language)}</p>
                     </div>
                     <div className="flex shrink-0 items-center gap-2">
                       <VerificationBadge status={fact.status} />
@@ -618,7 +618,7 @@ function StepDetailModal({
                         onClick={() => onShowSource(detail.source)}
                         className="text-xs font-medium text-teal-700 hover:underline dark:text-teal-300"
                       >
-                        Source
+                        {t.source}
                       </button>
                     </div>
                   </div>
@@ -631,7 +631,7 @@ function StepDetailModal({
             <div className="flex items-end justify-between border-2 border-ink-800 px-4 py-4 dark:border-ink-200">
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-saffron-600 dark:text-saffron-400">
-                  Application fee
+                  {t.applicationFee}
                 </p>
                 <p className="font-display text-3xl font-extrabold text-ink-800 dark:text-cream-50">
                   {detail.fee.amount}
@@ -643,7 +643,7 @@ function StepDetailModal({
                   onClick={() => onShowSource(detail.source)}
                   className="text-xs font-medium text-teal-700 hover:underline dark:text-teal-300"
                 >
-                  View source →
+                  {t.viewSource} →
                 </button>
               </div>
             </div>
@@ -656,13 +656,13 @@ function StepDetailModal({
             >
               <span className="flex items-center gap-2 font-heading text-sm font-semibold text-ink-700 dark:text-ink-100">
                 <Lightbulb size={16} className="text-saffron-500" />
-                Why this step?
+                {t.whyThisStep}
               </span>
-              <span className="text-xs text-ink-400">{showWhyThisStep ? 'Hide' : 'Show'}</span>
+              <span className="text-xs text-ink-400">{showWhyThisStep ? t.hide : t.show}</span>
             </button>
             {showWhyThisStep && (
               <div className="anim-enter pb-3">
-                <p className="text-sm leading-relaxed text-ink-600 dark:text-ink-200">{detail.whyThisStep}</p>
+                <p className="text-sm leading-relaxed text-ink-600 dark:text-ink-200">{translateContent(detail.whyThisStep, language)}</p>
                 <button
                   onClick={() => onShowSource(detail.source)}
                   className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-teal-700 dark:text-teal-300"
@@ -678,25 +678,25 @@ function StepDetailModal({
             {isCurrent && !isBlocked && (
               <>
                 <button onClick={onAdvance} className="btn-stamp flex-1">
-                  {isLastStep ? 'Complete journey' : 'Continue to next stop'}
+                  {isLastStep ? t.completeJourney : t.continue}
                   <ArrowRight size={16} />
                 </button>
                 <button onClick={onShowDoubt} className="btn-ghost flex-1">
                   <MessagesSquare size={16} />
-                  Ask about this step
+                  {t.askAboutStep}
                 </button>
               </>
             )}
             {isDone && (
               <div className="flex flex-1 items-center justify-center gap-2 border-2 border-teal-700 py-3 font-heading font-bold text-teal-800 dark:border-teal-300 dark:text-teal-300">
                 <Check size={18} strokeWidth={3} />
-                Stamped complete
+                {t.stampedComplete}
               </div>
             )}
             {isBlocked && (
               <div className="flex flex-1 items-center justify-center gap-2 border-2 border-dashed border-ink-300 py-3 font-heading font-bold text-ink-400">
                 <Lock size={16} />
-                Complete previous steps first
+                {t.completePreviousStepsFirst}
               </div>
             )}
           </div>
@@ -721,11 +721,12 @@ interface Message {
 }
 
 export function DoubtAssistant({ step, service, jurisdiction, onClose, onShowSource }: DoubtAssistantProps) {
+  const { language, t } = useLanguage();
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'humsafar',
-      text: `I can help with questions about "${step.title}". Ask me anything about this step — I'll answer based on official sources.`,
+      text: `${t.assistantGreeting} "${translateContent(step.title, language)}". ${t.assistantGreetingEnd}`,
     },
   ]);
   const [isTyping, setIsTyping] = useState(false);
@@ -747,17 +748,17 @@ export function DoubtAssistant({ step, service, jurisdiction, onClose, onShowSou
       if (!result.success) {
         return {
           role: 'humsafar',
-          text: result.error ?? "I couldn't find an answer for that right now.",
+          text: result.error ?? t.answerUnavailable,
           source: step.detail.source,
         };
       }
 
       const cited = result.confirmed ? step.detail.source : undefined;
       return { role: 'humsafar', text: result.answer, source: cited };
-    } catch (err) {
+    } catch {
       return {
         role: 'humsafar',
-        text: 'I could not reach Humsafar right now. Please try again in a moment.',
+        text: t.assistantUnavailable,
       };
     }
   };
@@ -775,14 +776,17 @@ export function DoubtAssistant({ step, service, jurisdiction, onClose, onShowSou
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
-      <div className="absolute inset-0 bg-ink-900/45" onClick={onClose} />
-      <div className="relative flex h-full w-full max-w-md flex-col border-l-2 border-ink-800 bg-cream-50 dark:border-ink-200 dark:bg-ink-900">
-        <div className="flex items-center justify-between border-b-2 border-ink-800 px-5 py-4 dark:border-ink-200">
+    <div className="fixed inset-0 z-50 pointer-events-none">
+  <div
+    className="absolute inset-0 bg-ink-900/45 pointer-events-auto"
+    onClick={onClose}
+  />
+  <div className="pointer-events-auto absolute right-6 bottom-6 flex h-[650px] w-[420px] max-h-[calc(100vh-3rem)] flex-col -2xl border-2 border-ink-800 bg-cream-50 shadow-2xl dark:border-ink-200 dark:bg-ink-900">
+    <div className="flex items-center justify-between border-b-2 border-ink-800 px-5 py-4 dark:border-ink-200">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-ink-400">Field notes</p>
-            <h2 className="font-display text-sm font-bold text-ink-800 dark:text-cream-50">Ask about this step</h2>
-            <p className="text-xs text-ink-400">{step.shortTitle}</p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-ink-400">{t.fieldNotes}</p>
+            <h2 className="font-display text-sm font-bold text-ink-800 dark:text-cream-50">{t.askAboutStep}</h2>
+            <p className="text-xs text-ink-400">{translateContent(step.shortTitle, language)}</p>
           </div>
           <button
             onClick={onClose}
@@ -820,7 +824,7 @@ export function DoubtAssistant({ step, service, jurisdiction, onClose, onShowSou
 
           {messages.length === 1 && (
             <div className="space-y-2 pt-2">
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink-400">Suggested questions</p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink-400">{t.suggestedQuestions}</p>
               {step.detail.commonQuestions.map((q, idx) => (
                 <button
                   key={idx}
@@ -867,7 +871,7 @@ export function DoubtAssistant({ step, service, jurisdiction, onClose, onShowSou
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-              placeholder="Ask about this step..."
+              placeholder={t.askPlaceholder}
               className="flex-1 bg-transparent py-2 text-sm text-ink-700 outline-none placeholder:text-ink-300 dark:text-cream-50"
             />
             <button
@@ -879,7 +883,7 @@ export function DoubtAssistant({ step, service, jurisdiction, onClose, onShowSou
             </button>
           </div>
           <p className="mt-2 text-center text-[10px] uppercase tracking-wider text-ink-400">
-            Answers from official sources only
+            {t.officialSources}
           </p>
         </div>
       </div>

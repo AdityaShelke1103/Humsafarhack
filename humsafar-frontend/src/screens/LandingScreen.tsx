@@ -5,6 +5,8 @@ import { AppHeader, StampSeal } from '@/components/Brand';
 import { RouteBackdrop } from '@/components/RouteBackdrop';
 import { searchSuggestions } from '@/data/journeyData';
 import { useInView } from '@/lib/useInView';
+import { useLanguage } from '@/i18n/LanguageContext';
+import { translateContent } from '@/i18n/contentTranslations';
 
 interface LandingScreenProps {
   onSearch: (query: string) => void;
@@ -43,6 +45,7 @@ const flashcards = [
 ];
 
 export function LandingScreen({ onSearch, errorMessage, clarificationMessage }: LandingScreenProps) {
+  const { language, t } = useLanguage();
   const [query, setQuery] = useState('');
   const { ref: flashcardsRef, isInView: flashcardsInView } = useInView({ threshold: 0.1 });
 
@@ -78,7 +81,7 @@ export function LandingScreen({ onSearch, errorMessage, clarificationMessage }: 
           <div className="anim-d4 absolute -right-2 top-28 flex flex-col items-center">
             <Traveller size={110} className="text-saffron-600 dark:text-saffron-400" />
             <p className="mt-2.5 max-w-[8rem] text-center text-[10px] uppercase tracking-[0.18em] text-ink-400 dark:text-ink-300">
-              Companion on the route
+              {t.companionOnRoute}
             </p>
           </div>
         </div>
@@ -93,14 +96,12 @@ export function LandingScreen({ onSearch, errorMessage, clarificationMessage }: 
             >
               01
             </span>
-            <span className="anim-hero-phrase-1 inline-block">Where</span>{' '}
-            <span className="anim-hero-phrase-2 inline-block">are you</span>{' '}
-            <span className="anim-hero-phrase-3 inline-block font-light text-saffron-500">headed</span>
+            <span className="anim-hero-phrase-1 inline-block">{t.whereAreYou}</span>{' '}
+            <span className="anim-hero-phrase-3 inline-block font-light text-saffron-500">{t.headed}</span>
           </h1>
 
           <p className="anim-d2 mt-6 max-w-2xl text-center text-lg sm:text-xl font-medium leading-relaxed text-ink-600 dark:text-ink-200">
-            Government paperwork should not feel like a maze. Name the destination —
-            this field guide maps the stops, documents, and official doors.
+            {t.paperworkDescription}
           </p>
 
           <form
@@ -115,10 +116,10 @@ export function LandingScreen({ onSearch, errorMessage, clarificationMessage }: 
                 htmlFor="destination"
                 className="text-xs sm:text-sm font-extrabold uppercase tracking-[0.22em] text-ink-500 dark:text-ink-300"
               >
-                Destination or procedure
+                {t.destinationOrProcedure}
               </label>
               <span className="font-mono text-xs sm:text-sm font-bold tracking-wider text-ink-400 dark:text-ink-400">
-                PRESS ENTER ↵
+                {t.pressEnter}
               </span>
             </div>
 
@@ -129,7 +130,7 @@ export function LandingScreen({ onSearch, errorMessage, clarificationMessage }: 
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Domicile certificate in Maharashtra…"
+                placeholder={t.domicilePlaceholder}
                 className="w-full bg-transparent px-3 py-2 font-heading text-lg sm:text-xl font-medium text-ink-800 outline-none placeholder:text-ink-300 dark:text-cream-50 dark:placeholder:text-ink-500"
               />
               {query && (
@@ -137,7 +138,7 @@ export function LandingScreen({ onSearch, errorMessage, clarificationMessage }: 
                   type="button"
                   onClick={() => setQuery('')}
                   className="mr-2 p-1.5 text-xl font-bold text-ink-400 hover:text-ink-800 dark:hover:text-cream-50"
-                  aria-label="Clear input"
+                  aria-label={t.clearInput}
                 >
                   ×
                 </button>
@@ -146,7 +147,7 @@ export function LandingScreen({ onSearch, errorMessage, clarificationMessage }: 
                 type="submit"
                 className="btn-stamp shrink-0 px-6 py-3 text-base sm:text-lg font-extrabold tracking-wide"
               >
-                <span>Go</span>
+                <span>{t.go}</span>
                 <ArrowRight size={18} strokeWidth={2.5} />
               </button>
             </div>
@@ -161,7 +162,7 @@ export function LandingScreen({ onSearch, errorMessage, clarificationMessage }: 
           {/* Popular routes with hover text-swap (Requirement 1) */}
           <div className="anim-d3 mt-8 flex flex-col items-center">
             <p className="text-xs sm:text-sm font-extrabold uppercase tracking-[0.24em] text-ink-500 dark:text-ink-300 text-center">
-              Popular routes
+              {t.popularRoutes}
             </p>
             <ul className="mt-3.5 flex flex-wrap justify-center gap-2.5 sm:gap-3">
               {(query.trim()
@@ -180,8 +181,8 @@ export function LandingScreen({ onSearch, errorMessage, clarificationMessage }: 
                     <span className="text-saffron-500 font-bold transition-transform duration-150 group-hover:scale-125">↗</span>
                     <span className="hover-text-swap">
                       <span className="hover-text-swap-inner">
-                        <span>{s}</span>
-                        <span aria-hidden="true">{s}</span>
+                        <span>{translateContent(s, language)}</span>
+                        <span aria-hidden="true">{translateContent(s, language)}</span>
                       </span>
                     </span>
                   </button>
@@ -201,17 +202,22 @@ export function LandingScreen({ onSearch, errorMessage, clarificationMessage }: 
             <div className="flex items-center gap-2.5">
               <span className="h-2.5 w-2.5 rounded-full bg-saffron-500 animate-pulse" />
               <p className="text-xs sm:text-sm font-extrabold uppercase tracking-[0.24em] text-ink-600 dark:text-ink-300">
-                Humsafar Field Principles · Core Guarantees
+                {t.fieldGuidePrinciples}
               </p>
             </div>
             <span className="hidden font-mono text-xs sm:text-sm font-bold tracking-wider text-ink-400 sm:inline dark:text-ink-400">
-              DISPATCH // VERIFIED PAPERS
+              {t.dispatchVerified}
             </span>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {flashcards.map((card, idx) => {
               const Icon = card.icon;
+              const copy = [
+                { badge: t.officialRecord, title: t.sourceLinked, desc: t.sourceLinkedDesc, detail: t.directPortalReferences },
+                { badge: t.visualRoute, title: t.journeyMapped, desc: t.journeyMappedDesc, detail: t.completeStopsFeesTimelines },
+                { badge: t.fieldReady, title: t.noGuesswork, desc: t.noGuessworkDesc, detail: t.checklistsEveryCounter },
+              ][idx];
               return (
                 <div
                   key={card.id}
@@ -228,10 +234,10 @@ export function LandingScreen({ onSearch, errorMessage, clarificationMessage }: 
                       </div>
                       <div>
                         <span className="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-ink-400 dark:text-ink-400">
-                          FLASHCARD #{card.id}
+                          {t.flashcardNumber} #{card.id}
                         </span>
                         <span className="text-xs font-bold uppercase tracking-[0.16em] text-saffron-600 dark:text-saffron-400">
-                          {card.badge}
+                          {copy.badge}
                         </span>
                       </div>
                     </div>
@@ -243,10 +249,10 @@ export function LandingScreen({ onSearch, errorMessage, clarificationMessage }: 
                   {/* Body Content */}
                   <div className="my-5">
                     <h3 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-ink-800 dark:text-cream-50">
-                      {card.title}
+                      {copy.title}
                     </h3>
                     <p className="mt-2.5 text-base leading-relaxed text-ink-600 dark:text-ink-200">
-                      {card.desc}
+                      {copy.desc}
                     </p>
                   </div>
 
@@ -254,7 +260,7 @@ export function LandingScreen({ onSearch, errorMessage, clarificationMessage }: 
                   <div className="flex items-center justify-between border-t border-dashed border-ink-300 pt-3.5 text-xs sm:text-sm font-semibold text-ink-600 dark:border-ink-600 dark:text-ink-300">
                     <span className="flex items-center gap-2">
                       <span className="h-2 w-2 rounded-full bg-saffron-500" />
-                      {card.detail}
+                      {copy.detail}
                     </span>
                     <span className="font-mono text-sm font-bold opacity-60 transition-transform duration-150 group-hover:translate-x-1.5 group-hover:opacity-100">
                       →

@@ -125,6 +125,7 @@ import { CompleteScreen } from '@/screens/CompleteScreen';
 import { fetchRoadmap } from '@/lib/api';
 import { adaptProcedureToJourney } from '@/lib/adapter';
 import type { Journey } from '@/data/journeyData';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 type Screen = 'landing' | 'loading' | 'brief' | 'checklist' | 'journey' | 'complete';
 
@@ -284,12 +285,13 @@ function App() {
 }
 
 function LoadingScreen({ message }: { message: string }) {
+  const { t } = useLanguage();
   return (
     <div className="paper-bg flex min-h-screen flex-col items-center justify-center gap-6 px-6 text-center">
       <div className="h-10 w-10 animate-spin rounded-full border-4 border-ink-800 border-t-transparent dark:border-cream-50 dark:border-t-transparent" />
       <p className="font-heading text-lg font-semibold text-ink-700 dark:text-cream-50">{message}</p>
       <p className="max-w-sm text-sm text-ink-400 dark:text-ink-300">
-        Humsafar is checking official government sources — this can take a few seconds.
+        {t.loadingSources}
       </p>
     </div>
   );

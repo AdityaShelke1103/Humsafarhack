@@ -1,5 +1,6 @@
 import { ArrowLeft, Moon, Sun } from 'lucide-react';
 import { useTheme } from '@/theme';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 function CompassMark() {
   return (
@@ -12,6 +13,7 @@ function CompassMark() {
 }
 
 export function BrandMark({ compact = false }: { compact?: boolean }) {
+  const { t } = useLanguage();
   return (
     <div className="flex items-center gap-3">
       <div className="flex h-10 w-10 items-center justify-center border-2 border-ink-800 bg-ink-800 shadow-[2px_2px_0_0_#142236] dark:border-saffron-400 dark:shadow-[2px_2px_0_0_#ffbd6e]">
@@ -23,7 +25,7 @@ export function BrandMark({ compact = false }: { compact?: boolean }) {
             Humsafar
           </p>
           <p className="mt-1 text-xs font-bold uppercase tracking-[0.22em] text-ink-500 dark:text-ink-300">
-            Field guide
+            {t.fieldGuide}
           </p>
         </div>
       )}
@@ -33,11 +35,12 @@ export function BrandMark({ compact = false }: { compact?: boolean }) {
 
 export function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
+  const { t } = useLanguage();
   return (
     <button
       type="button"
       onClick={toggleTheme}
-      aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+      aria-label={theme === 'dark' ? t.switchToLight : t.switchToDark}
       className="flex h-10 w-10 items-center justify-center border-2 border-ink-800 bg-cream-50 text-ink-700 shadow-[2px_2px_0_0_#142236] transition-all duration-150 hover:-translate-y-0.5 hover:bg-cream-100 hover:shadow-[3px_3px_0_0_#142236] active:translate-x-px active:translate-y-px dark:border-ink-300 dark:bg-ink-800 dark:text-cream-100 dark:shadow-[2px_2px_0_0_#ffbd6e] dark:hover:bg-ink-700"
     >
       {theme === 'dark' ? <Sun size={18} strokeWidth={2} /> : <Moon size={18} strokeWidth={2} />}
@@ -46,6 +49,8 @@ export function ThemeToggle() {
 }
 
 export function AppHeader({ onBack }: { onBack?: () => void }) {
+  const { language, setLanguage, t } = useLanguage();
+
   return (
     <header className="relative z-20 px-6 pt-5 sm:px-10">
       <div className="mx-auto flex max-w-6xl items-center justify-between border-b border-ink-800/30 pb-4 dark:border-ink-200/30">
@@ -58,15 +63,30 @@ export function AppHeader({ onBack }: { onBack?: () => void }) {
               <ArrowLeft size={16} strokeWidth={1.75} className="transition-transform duration-150 group-hover:-translate-x-0.5" />
               <span className="hover-text-swap">
                 <span className="hover-text-swap-inner">
-                  <span>Back</span>
-                  <span aria-hidden="true">Back</span>
+                  <span>{t.back}</span>
+                  <span aria-hidden="true">{t.back}</span>
                 </span>
               </span>
             </button>
           )}
           <BrandMark />
         </div>
-        <ThemeToggle />
+        <div className="flex items-center gap-3">
+  <select
+    value={language}
+    onChange={(e) =>
+      setLanguage(e.target.value as 'en' | 'hi' | 'mr')
+    }
+    className="h-10 border-2 border-ink-800 bg-cream-50 px-3 text-sm font-semibold text-ink-800 shadow-[2px_2px_0_0_#142236] outline-none dark:border-ink-300 dark:bg-ink-800 dark:text-cream-50 dark:shadow-[2px_2px_0_0_#ffbd6e]"
+    aria-label={t.selectLanguage}
+  >
+    <option value="en">{t.english}</option>
+    <option value="hi">{t.hindi}</option>
+    <option value="mr">{t.marathi}</option>
+  </select>
+
+  <ThemeToggle />
+</div>
       </div>
     </header>
   );

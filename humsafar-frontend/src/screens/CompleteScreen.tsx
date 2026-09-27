@@ -6,6 +6,8 @@ import { RouteBackdrop } from '@/components/RouteBackdrop';
 import { TicketFrame } from '@/components/TicketFrame';
 import { CornerBrackets } from '@/components/CornerBrackets';
 import type { Journey } from '@/data/journeyData';
+import { useLanguage } from '@/i18n/LanguageContext';
+import { translateContent } from '@/i18n/contentTranslations';
 
 interface CompleteScreenProps {
   journey: Journey | null;
@@ -31,6 +33,7 @@ const confettiParticles = [
 ];
 
 export function CompleteScreen({ journey, onRestart }: CompleteScreenProps) {
+  const { language, t } = useLanguage();
   const [replayStep, setReplayStep] = useState(0);
   const stepCount = journey?.steps.length ?? 0;
 
@@ -51,9 +54,9 @@ export function CompleteScreen({ journey, onRestart }: CompleteScreenProps) {
     return (
       <div className="paper-bg flex min-h-screen items-center justify-center px-6 text-center">
         <div>
-          <p className="text-ink-500 dark:text-ink-300">No journey to show.</p>
+          <p className="text-ink-500 dark:text-ink-300">{t.noJourney}</p>
           <button onClick={onRestart} className="btn-stamp mt-4">
-            Start over
+            {t.startOver}
           </button>
         </div>
       </div>
@@ -67,7 +70,7 @@ export function CompleteScreen({ journey, onRestart }: CompleteScreenProps) {
 
       <main className="relative z-10 flex flex-1 items-center justify-center px-4 pb-16 pt-6 sm:px-6">
         <div className="w-full max-w-2xl">
-          <TicketFrame className="anim-enter" serial="MH-DOM/2026/0927-V" label="Civic Clearance Visa">
+          <TicketFrame className="anim-enter" serial="MH-DOM/2026/0927-V" label={t.civicClearanceVisa}>
             <div className="relative px-6 py-8 sm:px-8">
               {/* Visa card inner with animated corner-brackets (Requirement 2 & 6) */}
               <div className="visa-inner relative p-5 sm:p-7">
@@ -101,19 +104,19 @@ export function CompleteScreen({ journey, onRestart }: CompleteScreenProps) {
                 <div className="flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-teal-600 dark:bg-teal-400" />
                   <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-teal-800 dark:text-teal-300">
-                    Official Clearance Granted
+                    {t.officialClearanceGranted}
                   </p>
                 </div>
 
                 <h1 className="mt-3 font-display text-4xl font-extrabold tracking-[-0.04em] text-ink-900 sm:text-6xl dark:text-cream-50">
                   You
                   <br />
-                  <span className="font-light text-saffron-500">made it.</span>
+                  <span className="font-light text-saffron-500">{t.madeIt}</span>
                 </h1>
 
                 <p className="mt-4 max-w-md text-sm leading-relaxed text-ink-600 dark:text-ink-300 sm:text-base">
-                  <span className="font-bold text-ink-900 dark:text-cream-50">{journey.title}</span>
-                  {' '}— all {journey.steps.length} statutory stops verified and ready for official submission. Keep this itinerary manifest for your appointment.
+                  <span className="font-bold text-ink-900 dark:text-cream-50">{translateContent(journey.title, language)}</span>
+                  {' '}— all {journey.steps.length} {t.completionSummary}
                 </p>
 
                 {/* Bearer Passport Block */}
@@ -123,16 +126,16 @@ export function CompleteScreen({ journey, onRestart }: CompleteScreenProps) {
                   </div>
                   <div className="sm:col-span-2">
                     <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink-400 dark:text-ink-300">
-                      Bearer & Dossier
+                      {t.bearerDossier}
                     </p>
                     <p className="font-heading text-sm font-bold text-ink-800 dark:text-cream-50">
-                      Civic Traveller · State of {journey.state}
+                      {t.civicTraveller} · {t.stateOf} {translateContent(journey.state, language)}
                     </p>
                     <p className="mt-1 text-xs text-ink-500 dark:text-ink-300">
-                      Authority: <span className="font-semibold text-ink-700 dark:text-cream-100">{journey.department}</span>
+                      {t.authority}: <span className="font-semibold text-ink-700 dark:text-cream-100">{translateContent(journey.department, language)}</span>
                     </p>
                     <p className="mt-0.5 text-xs text-ink-500 dark:text-ink-300">
-                      Service: <span className="font-semibold text-ink-700 dark:text-cream-100">{journey.service}</span>
+                      {t.service}: <span className="font-semibold text-ink-700 dark:text-cream-100">{translateContent(journey.service, language)}</span>
                     </p>
                   </div>
                 </div>
@@ -140,7 +143,7 @@ export function CompleteScreen({ journey, onRestart }: CompleteScreenProps) {
                 {/* Stamped Steps Audit List */}
                 <div className="mt-6 border-t border-dashed border-ink-300 pt-4 dark:border-ink-600">
                   <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-ink-400 dark:text-ink-300">
-                    Procedural Audit Log
+                    {t.proceduralAuditLog}
                   </p>
                   <ol className="mt-2 space-y-0">
                     {journey.steps.map((step, idx) => {
@@ -160,11 +163,11 @@ export function CompleteScreen({ journey, onRestart }: CompleteScreenProps) {
                               isVisible ? 'font-medium text-ink-800 dark:text-cream-50' : 'text-ink-400'
                             }`}
                           >
-                            {step.title}
+                            {translateContent(step.title, language)}
                           </span>
                           {isVisible && (
                             <span className="ml-auto shrink-0 font-heading text-[10px] font-extrabold uppercase tracking-wider text-teal-700 dark:text-teal-300">
-                              ✓ Cleared
+                              ✓ {t.cleared}
                             </span>
                           )}
                         </li>
@@ -182,7 +185,7 @@ export function CompleteScreen({ journey, onRestart }: CompleteScreenProps) {
                       rel="noopener noreferrer"
                       className="btn-stamp flex-1"
                     >
-                      Open {journey.sources[0].name}
+                      {t.open} {journey.sources[0].name}
                       <ExternalLink size={16} />
                     </a>
                   )}
@@ -193,24 +196,24 @@ export function CompleteScreen({ journey, onRestart }: CompleteScreenProps) {
                   >
                     <span className="hover-text-swap">
                       <span className="hover-text-swap-inner">
-                        <span>Print / Save Itinerary</span>
-                        <span aria-hidden="true">Print / Save Itinerary</span>
+                        <span>{t.printSaveItinerary}</span>
+                        <span aria-hidden="true">{t.printSaveItinerary}</span>
                       </span>
                     </span>
                   </button>
                   <button
                     onClick={onRestart}
                     className="btn-ghost shrink-0 px-4"
-                    title="Start new journey"
-                    aria-label="Start new journey"
+                    title={t.startNewJourney}
+                    aria-label={t.startNewJourney}
                   >
                     <RotateCcw size={16} />
                   </button>
                 </div>
 
                 <div className="mt-6 flex flex-wrap items-center justify-between border-t border-ink-200 pt-3 text-[10px] uppercase tracking-wider text-ink-400 dark:border-ink-700 dark:text-ink-400">
-                  <span>Verified official government sources</span>
-                  <span>Civic Field Guide</span>
+                  <span>{t.verifiedOfficialSources}</span>
+                  <span>{t.civicFieldGuide}</span>
                 </div>
               </div>
             </div>
