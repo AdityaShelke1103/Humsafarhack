@@ -165,6 +165,8 @@ import { AppHeader } from '@/components/Brand';
 import { RouteBackdrop } from '@/components/RouteBackdrop';
 import { TicketFrame } from '@/components/TicketFrame';
 import type { Journey } from '@/data/journeyData';
+import { useLanguage } from '@/i18n/LanguageContext';
+import { translateContent } from '@/i18n/contentTranslations';
 
 interface JourneyBriefScreenProps {
   journey: Journey;
@@ -173,6 +175,7 @@ interface JourneyBriefScreenProps {
 }
 
 export function JourneyBriefScreen({ journey, onStart, onBack }: JourneyBriefScreenProps) {
+  const { language, t } = useLanguage();
   const [showIntelligence, setShowIntelligence] = useState(false);
   const [visibleStep, setVisibleStep] = useState(0);
 
@@ -201,39 +204,39 @@ export function JourneyBriefScreen({ journey, onStart, onBack }: JourneyBriefScr
       <main className="relative z-10 px-6 pb-20 pt-6 sm:px-10">
         <div className="mx-auto max-w-3xl">
           <p className="anim-enter text-[11px] font-bold uppercase tracking-[0.28em] text-ink-400 dark:text-ink-300">
-            Itinerary · understood
+            {t.itineraryUnderstood}
           </p>
 
-          <TicketFrame className="anim-d1 mt-5" serial="HS–MH–01" label="Your journey">
+          <TicketFrame className="anim-d1 mt-5" serial="HS–MH–01" label={t.yourJourney}>
             <div className="px-6 py-7 sm:px-8">
               <h1 className="font-display text-3xl font-extrabold tracking-tight text-ink-800 sm:text-4xl dark:text-cream-50">
-                {journey.title}
+                {translateContent(journey.title, language)}
               </h1>
               <p className="mt-4 max-w-xl leading-relaxed text-ink-500 dark:text-ink-300">
-                {journey.description}
+                {translateContent(journey.description, language)}
               </p>
 
               <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-y border-dashed border-ink-300 py-5 sm:grid-cols-4 dark:border-ink-600">
                 <div>
-                  <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-400">Jurisdiction</dt>
-                  <dd className="mt-1 font-heading font-bold text-ink-800 dark:text-cream-50">{journey.state}</dd>
+                  <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-400">{t.jurisdiction}</dt>
+                  <dd className="mt-1 font-heading font-bold text-ink-800 dark:text-cream-50">{translateContent(journey.state, language)}</dd>
                 </div>
                 <div>
-                  <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-400">Authority</dt>
+                  <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-400">{t.authority}</dt>
                   <dd className="mt-1 font-heading text-sm font-bold text-ink-800 dark:text-cream-50">
-                    {journey.department}
+                    {translateContent(journey.department, language)}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-400">Journey Length</dt>
+                  <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-400">{t.journeyLength}</dt>
                   <dd className="mt-1 font-heading text-sm font-bold text-teal-700 dark:text-teal-300">
-                    {journey.estimatedTimeline ?? `${journey.steps.length} steps`}
+                    {translateContent(journey.estimatedTimeline ?? `${journey.steps.length} steps`, language)}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-400">Official Fee</dt>
+                  <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-400">{t.officialFee}</dt>
                   <dd className="mt-1 font-display text-lg font-bold text-saffron-500">
-                    {journey.officialFee ?? 'Not specified'}
+                    {translateContent(journey.officialFee, language) || t.notSpecified}
                   </dd>
                 </div>
               </dl>
@@ -241,16 +244,16 @@ export function JourneyBriefScreen({ journey, onStart, onBack }: JourneyBriefScr
               <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-b border-ink-200 pb-5 dark:border-ink-600">
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-400">
-                    Itinerary Scale
+                    {t.itineraryScale}
                   </p>
                   <p className="mt-1 text-sm font-semibold text-ink-700 dark:text-cream-50">
-                    {journey.steps.length} sequential stops · {journey.documents.length} mandatory & supporting documents
+                    {journey.steps.length} {t.sequentialStops} · {journey.documents.length} {t.mandatorySupportingDocuments}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="inline-block h-2 w-2 rounded-full bg-teal-500" />
                   <span className="text-xs font-semibold text-teal-700 dark:text-teal-300">
-                    {journey.sources[0] ? `Verified ${journey.sources[0].lastVerified}` : 'Live sourced'}
+                    {journey.sources[0] ? `${t.verified} ${journey.sources[0].lastVerified}` : t.liveSourced}
                   </span>
                 </div>
               </div>
@@ -260,7 +263,7 @@ export function JourneyBriefScreen({ journey, onStart, onBack }: JourneyBriefScr
                 className="mt-6 flex w-full items-center justify-between border-t border-ink-200 py-3 text-left dark:border-ink-600"
               >
                 <span className="font-heading text-sm font-semibold text-ink-700 dark:text-ink-100">
-                  How Humsafar found this
+                  {t.howFoundThis}
                 </span>
                 <ChevronDown
                   size={18}
@@ -281,14 +284,14 @@ export function JourneyBriefScreen({ journey, onStart, onBack }: JourneyBriefScr
                         0{idx + 1}
                       </span>
                       <Icon name={step.icon} size={14} className="text-ink-500 dark:text-ink-300" />
-                      <span className="text-sm text-ink-700 dark:text-ink-100">{step.label}</span>
+                      <span className="text-sm text-ink-700 dark:text-ink-100">{translateContent(step.label, language)}</span>
                     </li>
                   ))}
                 </ol>
               )}
 
               <button onClick={onStart} className="btn-stamp mt-2 w-full">
-                Start journey
+                {t.startJourney}
                 <ArrowRight size={18} />
               </button>
             </div>
@@ -296,7 +299,7 @@ export function JourneyBriefScreen({ journey, onStart, onBack }: JourneyBriefScr
 
           <div className="anim-d3 mt-8 flex items-center gap-3">
             <Traveller size={40} />
-            <p className="text-sm text-ink-400 dark:text-ink-300">Ready when you are</p>
+            <p className="text-sm text-ink-400 dark:text-ink-300">{t.readyWhenYouAre}</p>
           </div>
         </div>
       </main>

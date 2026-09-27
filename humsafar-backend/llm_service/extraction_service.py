@@ -169,6 +169,10 @@ Rules for step ordering and depends_on:
   this step. An empty list means no dependency.
 - "order" must be a unique integer starting from 1.
 - Do NOT create circular dependencies.
+
+Rules for documents:
+- Group interchangeable/alternative options into single document categories. For example, if a portal accepts multiple alternative identity proofs, do NOT create a separate entry for each alternative; create one grouped entry named "Proof of Identity (Any One)" with the acceptable alternatives listed in its description (e.g. "Aadhaar Card, Voter ID, PAN Card, or Passport").
+- Distinct mandatory documents (e.g. Identity Proof, Address Proof, Photograph, Self-Declaration, or specific legal certificates) must each have their own separate entry. If a procedure genuinely requires multiple distinct documents, include all of them without omitting any real requirement.
 """
 
 

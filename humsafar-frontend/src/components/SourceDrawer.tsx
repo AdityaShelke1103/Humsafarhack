@@ -1,5 +1,6 @@
 import { ShieldCheck, AlertCircle, Circle, ExternalLink, X } from 'lucide-react';
 import type { SourceLink, VerificationStatus } from '@/data/journeyData';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 const statusConfig: Record<
   VerificationStatus,
@@ -31,14 +32,16 @@ export function VerificationBadge({
   status: VerificationStatus;
   className?: string;
 }) {
+  const { t } = useLanguage();
   const cfg = statusConfig[status];
+  const label = status === 'verified' ? t.verified : status === 'needs_confirmation' ? t.needsConfirmation : t.notAvailable;
   const StatusIcon = cfg.icon;
   return (
     <span
       className={`inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-heading font-bold uppercase tracking-wider ${cfg.classes} ${className}`}
     >
       <StatusIcon size={11} strokeWidth={2} />
-      {cfg.label}
+      {label}
     </span>
   );
 }
@@ -52,6 +55,7 @@ export function SourceDrawer({
   allSources: SourceLink[];
   onClose: () => void;
 }) {
+  const { t } = useLanguage();
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
       <div className="absolute inset-0 bg-ink-900/50" onClick={onClose} />
@@ -59,10 +63,10 @@ export function SourceDrawer({
         <div className="flex items-start justify-between border-b-2 border-ink-800 px-6 py-4 dark:border-ink-600">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-ink-400 dark:text-ink-300">
-              Provenance
+              {t.provenance}
             </p>
             <h2 className="font-display text-xl font-bold text-ink-800 dark:text-cream-50">
-              Where this came from
+              {t.whereThisCameFrom}
             </h2>
           </div>
           <button
@@ -76,7 +80,7 @@ export function SourceDrawer({
         <div className="custom-scroll flex-1 space-y-8 overflow-y-auto px-6 py-6">
           <div>
             <h3 className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-ink-400 dark:text-ink-300">
-              Source for this fact
+              {t.sourceForFact}
             </h3>
             <div className="border-2 border-ink-800 p-4 dark:border-ink-200">
               <p className="font-heading font-bold text-ink-800 dark:text-cream-50">{source.name}</p>
@@ -90,14 +94,14 @@ export function SourceDrawer({
                 <ExternalLink size={12} />
               </a>
               <p className="mt-3 border-t border-dashed border-ink-300 pt-2 text-xs text-ink-400 dark:border-ink-500 dark:text-ink-300">
-                Last verified {source.lastVerified}
+                {t.lastVerified} {source.lastVerified}
               </p>
             </div>
           </div>
 
           <div>
             <h3 className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-ink-400 dark:text-ink-300">
-              All sources on this route
+              {t.allSourcesRoute}
             </h3>
             <div className="divide-y divide-ink-200 border-y border-ink-200 dark:divide-ink-600 dark:border-ink-600">
               {allSources.map((s) => (
@@ -127,14 +131,14 @@ export function SourceDrawer({
 
           <div>
             <h3 className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-ink-400 dark:text-ink-300">
-              How Humsafar verifies
+              {t.howHumsafarVerifies}
             </h3>
             <ol className="ruled-paper space-y-2 py-2 text-sm text-ink-600 dark:text-ink-200">
               {[
-                'Search official government portals',
-                'Cross-check facts across sources',
-                'Flag conflicting information',
-                'Link every fact to its source',
+                t.searchOfficialPortals,
+                t.crossCheckSources,
+                t.flagConflicts,
+                t.linkFacts,
               ].map((line, i) => (
                 <li key={line} className="flex gap-3">
                   <span className="font-display text-xs text-saffron-600 dark:text-saffron-400">
