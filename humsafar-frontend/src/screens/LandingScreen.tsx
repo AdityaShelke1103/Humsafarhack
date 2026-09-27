@@ -90,15 +90,19 @@ export function LandingScreen({ onSearch, errorMessage, clarificationMessage }: 
         <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
           {/* Staggered Hero Heading Reveal (Requirement 3) */}
           <h1 className="font-display text-5xl font-black leading-[1.04] tracking-[-0.035em] text-ink-800 sm:text-7xl lg:text-8xl dark:text-cream-50 text-center">
-            <span
-              className="anim-enter inline-block font-display font-black text-saffron-500 mr-3 sm:mr-4"
-              aria-hidden
-            >
-              01
-            </span>
-            <span className="anim-hero-phrase-1 inline-block">{t.whereAreYou}</span>{' '}
-            <span className="anim-hero-phrase-3 inline-block font-light text-saffron-500">{t.headed}</span>
-          </h1>
+  <span
+    className="anim-enter inline-block font-display font-black text-saffron-500 mr-3 sm:mr-4"
+    aria-hidden
+  >
+    01
+  </span>
+  <span className="anim-hero-phrase-1 inline-block">
+    Easy paperwork in sight,
+  </span>{' '}
+  <span className="anim-hero-phrase-3 inline-block font-light text-saffron-500">
+    Humsafar makes your journey right!
+  </span>
+</h1>
 
           <p className="anim-d2 mt-6 max-w-2xl text-center text-lg sm:text-xl font-medium leading-relaxed text-ink-600 dark:text-ink-200">
             {t.paperworkDescription}
